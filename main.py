@@ -1,5 +1,6 @@
 import json
-from flask import Flask
+import asyncio
+from flask import Flask, request
 import Db as Db
 app = Flask(__name__)
 
@@ -8,6 +9,25 @@ app = Flask(__name__)
 def send_users():
     return get_users()
 
+# GET requests will be blocked
+@app.route('/account/signup', methods=['POST'])
+def signup():
+    request_data = request.get_json()
+    print(request_data)
+    email = request_data['email']
+    password = request_data['password']
+    result = asyncio.run(Db.signup(request_data))
+    print(result)
+    if (result != "error"):
+        
+        return '''
+            The email value is: {}
+            The password value is: {}
+            '''.format(email, password)
+    else:
+        return '''
+            error }
+            '''
 
 @app.route("/<user_index>")
 def send_user_by_id(user_index):
@@ -80,6 +100,5 @@ def get_todo_param(user_index, todo_index, todo_param):
             return str(todo[param])
 
     return "Could not find todo parameter {}".format(todo_param)
-
 
 app.run()
