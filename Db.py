@@ -28,18 +28,22 @@ async def signup(user):
         print("eeeee","f")
         return "error"
     
-async def signup(user):
+async def signin(email, password):
     try:
         db = await aiosqlite.connect("db.db")
-        email = user['email']
-        password = user['password']
-        result = await db.execute("""INSERT INTO  users ("email" , "password") VALUES(?,?)""",(email,password))
-        await db.commit()
+
+        result= await db.execute("""SELECT * FROM users WHERE email = ? """,(email,))
+        id,firstName,lastName,storedEmail,storedPassowred = await result.fetchone()
+        await result.close()
         await db.close()
-        return result
+        if(password == storedPassowred):
+            return id,firstName,lastName,storedEmail,storedPassowred
+        else:
+            return "false"
+
     except:
-        print("eeeee","f")
         return "error"
+
       
 async def createDb():
     print('Hello ...')

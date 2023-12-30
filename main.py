@@ -2,22 +2,21 @@ import json
 import asyncio
 from flask import Flask, request
 import Db as Db
+import jwt
+import logic as lo
 app = Flask(__name__)
 
 
 @app.route("/")
 def send_users():
-    return get_users()
+    return "start"
 
-# GET requests will be blocked
 @app.route('/account/signup', methods=['POST'])
 def signup():
     request_data = request.get_json()
-    print(request_data)
     email = request_data['email']
     password = request_data['password']
     result = asyncio.run(Db.signup(request_data))
-    print(result)
     if (result != "error"):
         
         return '''
@@ -26,79 +25,43 @@ def signup():
             '''.format(email, password)
     else:
         return '''
-            error }
+           { error }
             '''
+@app.route('/account/signin', methods=['POST'])
+def signin():
+    request_data = request.get_json()
+    email = request_data['email']
+    password = request_data['password']
+    result = asyncio.run(Db.signin(email,password))
+    print(result)
+    if (result == "error"):
+        return '''
+           { error }
+            '''        
 
-@app.route("/<user_index>")
-def send_user_by_id(user_index):
-    return get_user(user_index)
+    elif(result == "false"):
+        return '''
+           { wrong email or password }
+            '''  
+    else:
+        return '''
+        The email value is: {}
+        The password value is: {}
+        '''.format(email, password)
+        
 
+@app.route('/recommendation')
+def query_example():
+    # if key doesn't exist, returns None
+    userId1 = request.args.get('userId1')
 
-@app.route("/<user_index>/<user_param>")
-def send_user_param(user_index, user_param):
-    return get_user_param(user_index, user_param)
-
-
-@app.route("/<user_index>/todos/<todo_index>")
-def send_todo(user_index, todo_index):
-    return get_todo(user_index, todo_index)
-
-
-@app.route("/<user_index>/todos/<todo_index>/<todo_param>")
-def send_todo_param(user_index, todo_index, todo_param):
-    return get_todo_param(user_index, todo_index, todo_param)
-
-
-def get_users():
-    with open("./data.json") as data:
-        return json.load(data)
-
-
-def get_user(user_index):
-    jsonData = get_users()
-
-    for index in range(len(jsonData)):
-        if str(index) == user_index:
-            return jsonData[index]
-
-    return "User could not be found"
+    # if key doesn't exist, returns a 400, bad request error
+    userId2 = request.args['userId2']
 
 
-def get_user_param(user_index, user_param):
-    user = get_user(user_index)
+    return '''
+              <h1>The userId1 value is: {}</h1>
+              <h1>The userId2 value is: {}</h1>'''.format(userId1, userId2)
 
-    for param in user:
-        if param == user_param:
-            return user[param]
-
-    return 'Param "{}" could be found on user with index {}'.format(
-        user_param,
-        user_index,
-    )
-
-
-def get_todo(user_index, todo_index):
-    user = get_user(user_index)
-
-    todos = user["todos"]
-
-    for index in range(len(todos)):
-        if str(index) == todo_index:
-            return todos[index]
-
-    return "Todo of index {} could not be found on user with index {}".format(
-        todo_index,
-        user_index,
-    )
-
-
-def get_todo_param(user_index, todo_index, todo_param):
-    todo = get_todo(user_index, todo_index)
-
-    for param in todo:
-        if param == todo_param:
-            return str(todo[param])
-
-    return "Could not find todo parameter {}".format(todo_param)
 
 app.run()
