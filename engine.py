@@ -11,7 +11,7 @@ def joinRatingWithGenreAndTitle(ratings,data):
     return joined_data
 
 #1.1
-data = ds.MovieLens('../datasets/')
+data = ds.MovieLens('./datasets/')
 
 print("Successfully installed dataset.")
 
@@ -107,7 +107,7 @@ def updateDict(record,dict):
 def getUsersDics(userId1,userId2):
     user1RatingDict = {}
     user2RatingDict = {}
-    with open("../datasets/ratings.csv", newline='') as csvfile:
+    with open("datasets/ratings.csv", newline='') as csvfile:
         ratings_reader = csv.DictReader(csvfile)
         for row in ratings_reader:
             if(row['userId'] == userId1):
