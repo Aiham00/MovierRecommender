@@ -3,9 +3,9 @@ import asyncio
 from flask import Flask, request
 import Db as Db
 import jwt
-import logic as lo
+import json
 app = Flask(__name__)
-
+import engine
 
 @app.route("/")
 def send_users():
@@ -55,13 +55,16 @@ def query_example():
     # if key doesn't exist, returns None
     userId1 = request.args.get('userId1')
 
-    # if key doesn't exist, returns a 400, bad request error
+    # if key doesn't exist, returns a 400, bad request error 
     userId2 = request.args['userId2']
+    type = True if (request.args['type'] == "true") else False
 
 
-    return '''
-              <h1>The userId1 value is: {}</h1>
-              <h1>The userId2 value is: {}</h1>'''.format(userId1, userId2)
+    recommendations = engine.getUsersRecommendations(userId1,userId2,type)
+    recommendations = recommendations.to_json(orient="records")
+    return json.dumps(recommendations)
+
+
 
 
 app.run()
