@@ -119,6 +119,23 @@ function loadSearchBar(bodyDiv){
     submitButton.id="search-button"
     form.appendChild(submitButton)
 
+    const checkboxParagraph = document.createElement("p")
+    const checkboxlabel = document.createElement("label")
+    checkboxParagraph.appendChild(checkboxlabel)
+    const checkboxInput = document.createElement("input")
+    checkboxInput.type = "checkbox"
+    checkboxlabel.appendChild(checkboxInput)
+    const checkboxSpan = document.createElement("span")
+    checkboxSpan.innerText = "Allow one user watching"
+    checkboxlabel.appendChild(checkboxSpan)
+    form.appendChild(checkboxParagraph)
+
+    /**    <p>
+      <label>
+        <input type="checkbox" checked="checked" />
+        <span>Yellow</span>
+      </label>
+    </p> */
     const buttonIcon = document.createElement("i")
     buttonIcon.classList.add("material-icons")
     buttonIcon.classList.add("search-icon")
@@ -128,7 +145,7 @@ function loadSearchBar(bodyDiv){
     submitButton.addEventListener('click', function(e){
         e.preventDefault()
         const userId2 = input.value.trim()
-        const type = "true"
+        const type = !checkboxInput.checked
         const query = "userId2="+userId2+"&type="+type
         const url = "/recommendation?"+query
         history.pushState(null, "", url)
