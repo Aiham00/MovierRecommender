@@ -25,7 +25,6 @@ async def signup(user):
         await db.close()
         return result
     except:
-        print("eeeee","f")
         return "error"
     
 async def signin(email, password):
@@ -37,12 +36,13 @@ async def signin(email, password):
         await result.close()
         await db.close()
         if(password == storedPassowred):
-            return id,firstName,lastName,storedEmail,storedPassowred
+            result = {"error":"false","id":id,"fn":firstName,"ln":lastName,"email":storedEmail,"password":storedPassowred}
+            return  result
         else:
-            return "false"
+            return  {"error":"no user"}
 
     except:
-        return "error"
+        return  {"error":"external error"}
 
       
 async def createDb():

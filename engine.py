@@ -151,15 +151,20 @@ def getCombinedDict(dict1,dict2):
   
 
 def getUsersRecommendations(user1,user2,type):
-    user1Dict, user2Dict = getUsersDics(user1,user2)
-    if (type == True):
-        combinedDict = getCombinedDict(user1Dict,user2Dict)
-        return getDictRecommendations(combinedDict)
+    if(user2 == '""'):
+        user1Dict, user2Dict = getUsersDics(user1,user1)
+        return getDictRecommendations(user1Dict)
     else:
-        user1Recommendations = getDictRecommendations(user1Dict)
-        user2Recommendations = getDictRecommendations(user2Dict)
+        user1Dict, user2Dict = getUsersDics(user1,user2)
 
-        recommendations = pd.concat([user1Recommendations,user2Recommendations],axis=0)
-    return recommendations.drop_duplicates(subset="title")
-getUsersRecommendations("2","3",True)
+        if (type == True):
+            combinedDict = getCombinedDict(user1Dict,user2Dict)
+            return getDictRecommendations(combinedDict)
+        else:
+            user1Recommendations = getDictRecommendations(user1Dict)
+            user2Recommendations = getDictRecommendations(user2Dict)
+
+            recommendations = pd.concat([user1Recommendations,user2Recommendations],axis=0)
+            return recommendations.drop_duplicates(subset="title")
+#getUsersRecommendations("2","3",True)
 #print(joined_data.head(rows_to_show))
