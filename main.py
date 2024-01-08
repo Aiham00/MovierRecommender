@@ -78,6 +78,13 @@ def toJson(items):
     for item in items:
         listOfItems.append(item)
     return listOfItems
+def formatMovies(movies):
+    formatedmovies = []
+    for movie in movies:
+        formatedMovie = [movie["genre"]["value"],movie["title"]["value"],movie["date"]["value"]]
+        formatedmovies.append(formatedMovie)
+    return formatedmovies
+            
 @app.route('/recommendation')
 def query_example():
     authorizationHeader = request.headers['Authorization']
@@ -91,14 +98,24 @@ def query_example():
 
     # if key doesn't exist, returns a 400, bad request error 
     userId2 = request.args['userId2']
-    print(userId2)
-    type = True if (request.args['type'] == "true") else False
+    type = request.args['type']
+    recommendations = ""
+    print(type)
 
-
-    recommendations = engine.getUsersRecommendations(userId1,userId2,type)
+    if(type=="wiki"):
+        movies = engine.getWikidataRecommendations(userId1,userId2)
+        recommendations = formatMovies(movies)
+  
+    else:
+        print("2222")
+        type = True if (request.args['type'] == "true") else False
+        recommendations = engine.geLensKitRecommendations(userId1,userId2,type)
     #recommendations = recommendations.to_json(orient="records")
+    if (not isinstance(recommendations, list)):
+        recommendations = recommendations.values.tolist()
     response = app.response_class(
-    response=json.dumps(recommendations.values.tolist()),
+    
+    response=json.dumps(recommendations),
     status=200,
     mimetype='application/json'
     )

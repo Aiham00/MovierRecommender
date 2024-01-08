@@ -1,5 +1,6 @@
 
 function loadEntry() {
+
     const bodyDiv = document.querySelector('.container#entry-page')
     bodyDiv.innerHTML=""
     const loginCardDiv = document.createElement("div")

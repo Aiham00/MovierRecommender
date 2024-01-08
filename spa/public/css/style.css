@@ -37,19 +37,24 @@ p {
 input.search-field {
     font-weight: 500;
     color: #0000008a;
-    border-radius: 2px;
     border: 0;
     border-radius: 5px;
     height: 36px;
     padding: 8px 8px 8px 60px;
-    width: 400px;
+    width: 600px;
     background: #f7f7f7;
     transition: background 0.2s, width .2s;
   }
   input.search-field:hover {
     background: #ebebeb;
   }
-  #search-button{
-    margin-left: 20px;
+  #lens-search-button,#wiki-search-button{
+    margin: 20px;
+    width: 150px;
+    border-radius: 5px;
+    text-align: center;
   }
+  #lens-search-icon{
 
+    display: inline;
+  }

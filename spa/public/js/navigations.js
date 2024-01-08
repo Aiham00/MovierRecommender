@@ -110,14 +110,24 @@ function loadSearchBar(bodyDiv){
     input.value=""
     form.appendChild(input)
 
-    const submitButton = document.createElement("a")
-    submitButton.classList.add("btn-floating")
-    submitButton.classList.add("btn-medium")
-    submitButton.classList.add("waves-effect")
-    submitButton.classList.add("waves-light")
-    submitButton.classList.add("blacke")
-    submitButton.id="search-button"
-    form.appendChild(submitButton)
+    const wikidataButton = document.createElement("a")
+    wikidataButton.classList.add("btn-floating")
+    wikidataButton.classList.add("btn-medium")
+    wikidataButton.classList.add("waves-effect")
+    wikidataButton.classList.add("waves-light")
+    wikidataButton.classList.add("blacke")
+    wikidataButton.id="wiki-search-button"
+    form.appendChild(wikidataButton)
+
+    const lenskitButton = document.createElement("a")
+    lenskitButton.classList.add("btn-floating")
+    lenskitButton.classList.add("btn-medium")
+    lenskitButton.classList.add("waves-effect")
+    lenskitButton.classList.add("waves-light")
+    lenskitButton.classList.add("blacke")
+    lenskitButton.innerText="lens"
+    lenskitButton.id="lens-search-button"
+    form.appendChild(lenskitButton)
 
     const checkboxParagraph = document.createElement("p")
     const checkboxlabel = document.createElement("label")
@@ -126,6 +136,7 @@ function loadSearchBar(bodyDiv){
     checkboxInput.type = "checkbox"
     checkboxlabel.appendChild(checkboxInput)
     const checkboxSpan = document.createElement("span")
+
     checkboxSpan.innerText = "Allow one user watching"
     checkboxlabel.appendChild(checkboxSpan)
     form.appendChild(checkboxParagraph)
@@ -136,16 +147,46 @@ function loadSearchBar(bodyDiv){
         <span>Yellow</span>
       </label>
     </p> */
-    const buttonIcon = document.createElement("i")
-    buttonIcon.classList.add("material-icons")
-    buttonIcon.classList.add("search-icon")
-    buttonIcon.innerText ="search"
-    submitButton.appendChild(buttonIcon)
+    const lensSearchIcon = document.createElement("i")
+    lensSearchIcon.classList.add("material-icons")
+    lensSearchIcon.classList.add("search-icon")
+    lensSearchIcon.innerText ="search"
+    lensSearchIcon.id="lens-search-icon"
+
+    /*const wikiSearchLabel = document.createElement("label")
+    wikiSearchLabel.innerText = "gg"
+    const lensSearchLabel = document.createElement("label")
+    lensSearchLabel.innerText = "lens"
     
-    submitButton.addEventListener('click', function(e){
+    wikidataButton.appendChild(wikiSearchLabel)
+    lenskitButton.appendChild(lensSearchLabel)*/
+
+    const wikiSearchIcon = document.createElement("i")
+    wikiSearchIcon.classList.add("material-icons")
+    wikiSearchIcon.classList.add("search-icon")
+    wikiSearchIcon.innerText ="search"
+
+
+    wikidataButton.appendChild(wikiSearchIcon)
+    lenskitButton.appendChild(lensSearchIcon)
+
+    //wikidataButton.innerText = "Wikidata search"
+    //lenskitButton.innerText = "Lenskit search"
+
+    wikidataButton.addEventListener('click', function(e){
         e.preventDefault()
         const userId2 = input.value.trim()
-        const type = !checkboxInput.checked
+        const type = "wiki"
+        const query = "userId2="+userId2+"&type="+type
+        const url = "/recommendation?"+query
+        history.pushState(null, "", url)
+        hideCurrentPage()
+        showPage(url)
+      })
+    lenskitButton.addEventListener('click', function(e){
+        e.preventDefault()
+        const userId2 = input.value.trim()
+        const type =  !checkboxInput.checked
         const query = "userId2="+userId2+"&type="+type
         const url = "/recommendation?"+query
         history.pushState(null, "", url)
@@ -174,13 +215,12 @@ function loadHomePage(){
 }
 
 function updateBarLogStatus(){
+    window.localStorage.setItem("token",false)
 
     const logOutbutton = document.querySelector("a#logout-page ")
     const entrybutton = document.querySelector("a#entry-page ")
     const recommendationButton = document.querySelector("a#recommendation-page ")
-    const token = window.localStorage.getItem("token")
-    if (token){
-        if (JSON.parse(token)){
+        if (isLoggedin()){
             logOutbutton.classList.remove("vol-menu-hidden")
             entrybutton.classList.add("vol-menu-hidden")
             recommendationButton.classList.remove("vol-menu-hidden")
@@ -189,11 +229,7 @@ function updateBarLogStatus(){
             logOutbutton.classList.add("vol-menu-hidden")
             recommendationButton.classList.add("vol-menu-hidden")
         }
-    }
-    else{
-        entrybutton.classList.remove("vol-menu-hidden")
-        logOutbutton.classList.add("vol-menu-hidden")
-    }
+
 }
 function handleAnchorOnClick(anchor,url){
     anchor.setAttribute('href', url)

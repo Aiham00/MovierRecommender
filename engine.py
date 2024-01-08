@@ -1,13 +1,14 @@
 import lenskit.datasets as ds
 import pandas as pd
 import csv
-def getUserRatings(data,userId):
-    filtered_data = data[data['user'] == userId]
-    return filtered_data
+import wikidataManager as wm
+from json import loads, dumps
+
   
 def joinRatingWithGenreAndTitle(ratings,data):
     joined_data = ratings.join(data.movies['genres'], on='item')
     joined_data = joined_data.join(data.movies['title'], on='item')
+
     return joined_data
 
 #1.1
@@ -72,7 +73,6 @@ def recommendedMoviesBasedOnGenre(genre,minimum_to_include):
     joined_data = sorted_avg_ratings.join(data.movies['title'], on='item')
     joined_data = joined_data[joined_data.columns[3:]]
     print("RECOMMENDED FOR {} MOVIES FANS:".format(genre))
-    print( joined_data.head(rows_to_show))
     
 #recommendedMoviesBasedOnGenre('Action',minimum_to_include)
 #recommendedMoviesBasedOnGenre('Romance',minimum_to_include)
@@ -134,7 +134,6 @@ def getDictRecommendations(userDict):
 
     joinedData = joinRatingWithGenreAndTitle(userRecommendations,data)
     joinedData = joinedData[joinedData.columns[2:]]
-    print(joinedData)
     return joinedData
   
 def getCombinedDict(dict1,dict2):
@@ -150,7 +149,7 @@ def getCombinedDict(dict1,dict2):
     return combinedDict
   
 
-def getUsersRecommendations(user1,user2,type):
+def geLensKitRecommendations(user1,user2,type):
     if(user2 == '""'):
         user1Dict, user2Dict = getUsersDics(user1,user1)
         return getDictRecommendations(user1Dict)
@@ -166,5 +165,56 @@ def getUsersRecommendations(user1,user2,type):
 
             recommendations = pd.concat([user1Recommendations,user2Recommendations],axis=0)
             return recommendations.drop_duplicates(subset="title")
+def getUserRatings(data,userId):
+    id = 0
+    if(len(userId)!= 0):
+        id = int(userId)
+    filtered_data = data.ratings[data.ratings['user'] == id]
+    return filtered_data
+
+def joinImdbId(ratings,numberOfRecordes):
+    joinedRatines = ratings.join(data.links['imdbId'], on='item')
+    joinedRatines = joinedRatines.sort_values(by="rating", ascending=False)
+    joinedRatines = joinedRatines.head(numberOfRecordes)
+    joinedRatines = joinedRatines[joinedRatines.columns[4:]]
+    JoinedRatingsJsonString = joinedRatines.to_json(orient="records")
+    joinedRatingsJson=loads(JoinedRatingsJsonString)
+    return joinedRatingsJson
+
+def getWikidataRecommendations(userId1,userId2):
+    numberOfRecordes = 10
+    user1ratings = getUserRatings(data,userId1)
+    user1ratingsJson = joinImdbId(user1ratings,numberOfRecordes)
+    ratings = user1ratingsJson
+    print(ratings)
+
+    if(len(userId2) >0):
+        user2ratings = getUserRatings(data,userId2)
+        user2ratingsJson = joinImdbId(user2ratings,numberOfRecordes)
+        ratings+=user2ratingsJson
+    imdbIds = []
+    for rating in ratings:
+        imdbIds.append("tt"+ str(rating["imdbId"]))
+    movies = wm.getRecommendation(imdbIds)
+    return removeDoublicats(movies)
+def removeDoublicats(list):
+    uniqueVeluesList = []
+    newList = []
+    for movie in list:
+       if(movie["title"] not in uniqueVeluesList):
+           uniqueVeluesList.append(movie["title"])
+           newList.append(movie)
+    return newList
 #getUsersRecommendations("2","3",True)
 #print(joined_data.head(rows_to_show))
+#datad = joinRatingWithGenreAndTitle(user1Dict,data)
+user1Dict = getUserRatings(data,"2")
+
+datad = user1Dict.join(data.links['imdbId'], on='item')
+datad = datad.sort_values(by="rating", ascending=False)
+datad = datad.head(5)
+recommendations = datad.to_json(orient="records")
+l=loads(recommendations)
+g=getWikidataRecommendations("2","3")
+f=removeDoublicats(g)
+print(f)
