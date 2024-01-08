@@ -54,7 +54,7 @@ input.search-field {
     border-radius: 5px;
     text-align: center;
   }
-  #lens-search-icon{
+  #lens-search-icon,#wiki-search-icon{
 
     display: inline;
   }

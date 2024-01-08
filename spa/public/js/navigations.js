@@ -116,6 +116,8 @@ function loadSearchBar(bodyDiv){
     wikidataButton.classList.add("waves-effect")
     wikidataButton.classList.add("waves-light")
     wikidataButton.classList.add("blacke")
+    wikidataButton.innerText="wikidata search"
+
     wikidataButton.id="wiki-search-button"
     form.appendChild(wikidataButton)
 
@@ -125,7 +127,7 @@ function loadSearchBar(bodyDiv){
     lenskitButton.classList.add("waves-effect")
     lenskitButton.classList.add("waves-light")
     lenskitButton.classList.add("blacke")
-    lenskitButton.innerText="lens"
+    lenskitButton.innerText="Lenskit search"
     lenskitButton.id="lens-search-button"
     form.appendChild(lenskitButton)
 
@@ -165,6 +167,7 @@ function loadSearchBar(bodyDiv){
     wikiSearchIcon.classList.add("material-icons")
     wikiSearchIcon.classList.add("search-icon")
     wikiSearchIcon.innerText ="search"
+    wikiSearchIcon.id="wiki-search-icon"
 
 
     wikidataButton.appendChild(wikiSearchIcon)
@@ -215,7 +218,7 @@ function loadHomePage(){
 }
 
 function updateBarLogStatus(){
-    window.localStorage.setItem("token",false)
+    //window.localStorage.setItem("token",false)
 
     const logOutbutton = document.querySelector("a#logout-page ")
     const entrybutton = document.querySelector("a#entry-page ")
