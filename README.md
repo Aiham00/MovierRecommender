@@ -9,4 +9,9 @@ run python main.py
 or python3 main.py
 
 send requests to http://127.0.0.1:5000
-ex: http://127.0.0.1:5000/recommendation?userId1=2&userId2=3&type=false
+ex: http://127.0.0.1:5000/recommendation?userId2=3&type=false
+
+frontend running:
+npm install
+node spa/app.js
+http://127.0.0.1:8040/
