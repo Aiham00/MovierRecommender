@@ -18,19 +18,18 @@ def send_users():
 def signup():
     request_data = request.get_json()
     email = request_data['email']
-    result = Db.signup(request_data)
-    print(result)
+    result = asyncio.run(Db.signup(request_data))
 
-    if (result != "error"):
+    if ( not result["error"]):
         response = app.response_class(
-        response=json.dumps([email]),
+        response=json.dumps({"email":email}),
         status=201,
         mimetype='application/json'
         )
         return response
     else:
         response = app.response_class(
-        response=json.dumps(["error"]),
+        response=json.dumps({"error":"db error"}),
         status=400,
         mimetype='application/json'
         )
