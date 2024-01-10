@@ -4,7 +4,6 @@ import aiosqlite
 
 
 
-#db.execute('CREATE TABLE IF NOT EXISTS "persons" ("id"	INTEGER UNIQUE,"name"	TEXT UNIQUE,PRIMARY KEY("id" AUTOINCREMENT));')
 async def createTable():
     conn=sqlite3.connect("db.db",check_same_thread=False)
     db=conn.cursor()
