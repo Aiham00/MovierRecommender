@@ -60,7 +60,7 @@ def getMovieInfoByImdbId(imdbId):
     SELECT ?director ?genre ?producer ?writer ?artist
     WHERE {
     VALUES ?type1 { wd:Q5398426 wd:Q11424} ?movie wdt:P31 ?type1 .
-    ?movie wdt:P345 '"""+imdbId+"""'.
+    ?movie wdt:P345 'tt"""+imdbId+"""'.
     ?movie wdt:P57 ?director.
     ?movie wdt:P136 ?genre.
     ?movie wdt:P162 ?producer.

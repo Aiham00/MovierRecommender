@@ -11,8 +11,6 @@ data = ds.MovieLens('./datasets/')
 print("Successfully installed dataset.")
 
 
-numberOfRecommendations = 10  #<---- This is the number of recommendations to generate. You can change this if you want to see more recommendations
-
 userUser = UserUser(15, min_nbrs=3) #These two numbers set the minimum (3) and maximum (15) number of neighbors to consider. These are considered "reasonable defaults," but you can experiment with others too
 algo = Recommender.adapt(userUser)
 algo.fit(data.ratings)
@@ -22,6 +20,7 @@ print("Set up a User-User algorithm!")
 def joinRatingWithGenreAndTitle(ratings,data):
     joined_data = ratings.join(data.movies['genres'], on='item')
     joined_data = joined_data.join(data.movies['title'], on='item')
+    joined_data = joined_data.join(data.links['imdbId'], on='item')
 
     return joined_data
   
@@ -56,6 +55,8 @@ def getUsersDics(userId1,userId2):
     return user1RatingDict, user2RatingDict
   
 def getDictRecommendations(userDict):
+    numberOfRecommendations = 10  #<---- This is the number of recommendations to generate. You can change this if you want to see more recommendations
+
     userRecommendations = algo.recommend(-1, numberOfRecommendations, ratings=pd.Series(userDict))  #Here, -1 tells it that it's not an existing user in the set, that we're giving new ratings, while 10 is how many recommendations it should generate
 
     joinedData = joinRatingWithGenreAndTitle(userRecommendations,data)
@@ -121,9 +122,10 @@ def getWikidataRecommendations(userId1,userId2):
         ratings+=user2ratingsJson
     imdbIds = []
     for rating in ratings:
-        imdbIds.append("tt"+ str(rating["imdbId"]))
+        imdbIds.append(str(rating["imdbId"]))
     movies = wm.getRecommendation(imdbIds)
     return removeDoublicats(movies)
+
 def removeDoublicats(list):
     uniqueVeluesList = []
     newList = []

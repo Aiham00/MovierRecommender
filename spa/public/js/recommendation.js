@@ -60,7 +60,11 @@ async function loadRecommenationsPage(query) {
           tbody.appendChild(tr)
 
           const td1 = document.createElement('td')
-          td1.innerText = movie[1]
+          const td1Anchor = document.createElement('a')
+          td1Anchor.href = "http://www.imdb.com/title/tt"+movie[2]
+          td1Anchor.target = "_blank"
+          td1.appendChild(td1Anchor)
+          td1Anchor.innerText = movie[1]
           tr.appendChild(td1)
 
           const td2 = document.createElement('td')
