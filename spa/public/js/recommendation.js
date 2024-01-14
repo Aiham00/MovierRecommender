@@ -1,9 +1,25 @@
 async function loadRecommenationsPage(query) {
   const token = JSON.parse(window.localStorage.getItem("token"))
+  const bodyDiv = document.querySelector('.container#entry-page')
+  bodyDiv.innerHTML = ""
+  const title = document.createElement("h3")
+  title.innerText = " Recommenations"
+  bodyDiv.appendChild(title)
+  if(isLoggedin()){
+    loadSearchBar(bodyDiv)
 
+  }
+  const progressDiv = document.createElement("div")
+  progressDiv.classList.add("progress")
+  const indeterminate = document.createElement("div")
+  indeterminate.classList.add("indeterminate")
+  progressDiv.appendChild(indeterminate)
+  bodyDiv.appendChild(progressDiv)
+  progressDiv.classList.remove("vol-menu-hidden")
   if (!token){
     
   }
+
   const response = await fetch('http://localhost:5000/recommendation?'+query,{
     headers: {"Content-Type": "application/json",
               "Authorization": "Bearer "+token
@@ -15,15 +31,8 @@ async function loadRecommenationsPage(query) {
     return result
 
       .then(function(movies){
-        const bodyDiv = document.querySelector('.container#entry-page')
-        bodyDiv.innerHTML = ""
-        const title = document.createElement("h3")
-        title.innerText = " Recommenations"
-        bodyDiv.appendChild(title)
-        if(isLoggedin()){
-          loadSearchBar(bodyDiv)
+        progressDiv.classList.add("vol-menu-hidden")
 
-        }
 
         const table = document.createElement('table')
         bodyDiv.appendChild(table)
