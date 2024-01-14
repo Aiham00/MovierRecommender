@@ -144,7 +144,7 @@ def getWikiRecommendation(directors,genres,producers,writers,artists):
     FILTER(LANG(?title)="en")
     FILTER(LANG(?genre)="en")    }
     """
-    movies = askWikidata(queryWithOr)
+    movies = askWikidata(queryWithAnd)
 
     return movies["results"]["bindings"]
 #director = getMovieInfoByLabel("Submarine")
