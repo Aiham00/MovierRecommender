@@ -128,7 +128,14 @@ function loadSignupPage(){
       return response.json()
     
       .then(function(result){
-        showPage("/entry/login")
+        console.log(result)
+        if(result.status == 201){
+          showPage("/entry/login")
+
+        }else{
+          showPage("/entry/sign-up")
+
+        }
 
       })
       

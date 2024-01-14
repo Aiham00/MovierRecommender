@@ -16,6 +16,8 @@ async def createTable():
     return d
 
 async def signup(user):
+    error = False
+    model = []
     try:
         db = await aiosqlite.connect("db.db")
         email = user['email']
@@ -23,10 +25,13 @@ async def signup(user):
         result = await db.execute("""INSERT INTO  users ("email" , "password") VALUES(?,?)""",(email,password))
         await db.commit()
         await db.close()
-        return result
     except:
-        return "error"
-    
+        error =True
+    else:
+        model = result
+    finally:
+        return {"error":error, "result":model}
+
 async def signin(email, password):
     try:
         db = await aiosqlite.connect("db.db")
