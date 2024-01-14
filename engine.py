@@ -5,8 +5,16 @@ import csv
 import pandas as pd
 from lenskit.algorithms import Recommender
 from lenskit.algorithms.user_knn import UserUser
+import numpy as np
 
 data = ds.MovieLens('./datasets/')
+dataLinks = pd.read_csv("./datasets/links.csv", dtype={
+            'movieId': np.int32,
+            'imdbId': np.object,
+            'tmdbId': pd.Int64Dtype()
+        })
+dataLinks.rename(columns={'movieId': 'item'}, inplace=True)
+dataLinks.set_index('item', inplace=True)
 
 print("Successfully installed dataset.")
 
@@ -20,7 +28,7 @@ print("Set up a User-User algorithm!")
 def joinRatingWithGenreAndTitle(ratings,data):
     joined_data = ratings.join(data.movies['genres'], on='item')
     joined_data = joined_data.join(data.movies['title'], on='item')
-    joined_data = joined_data.join(data.links['imdbId'], on='item')
+    joined_data = joined_data.join(dataLinks['imdbId'], on='item')
 
     return joined_data
   
@@ -100,7 +108,7 @@ def getUserRatings(data,userId):
     return filtered_data
   
 def joinImdbId(ratings,numberOfRecordes):
-    joinedRatines = ratings.join(data.links['imdbId'], on='item')
+    joinedRatines = ratings.join(dataLinks['imdbId'], on='item')
     joinedRatines = joinedRatines.sort_values(by="rating", ascending=False)
     joinedRatines = joinedRatines.head(numberOfRecordes)
     joinedRatines = joinedRatines[joinedRatines.columns[4:]]
@@ -114,7 +122,6 @@ def getWikidataRecommendations(userId1,userId2):
     user1ratings = getUserRatings(data,userId1)
     user1ratingsJson = joinImdbId(user1ratings,numberOfRecordes)
     ratings = user1ratingsJson
-    print(ratings)
 
     if(len(userId2) >0):
         user2ratings = getUserRatings(data,userId2)
@@ -124,6 +131,7 @@ def getWikidataRecommendations(userId1,userId2):
     for rating in ratings:
         imdbIds.append(str(rating["imdbId"]))
     movies = wm.getRecommendation(imdbIds)
+
     return removeDoublicats(movies)
 
 def removeDoublicats(list):

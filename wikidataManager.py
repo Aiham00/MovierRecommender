@@ -2,10 +2,11 @@ from SPARQLWrapper import SPARQLWrapper, JSON
 
 wikiData = SPARQLWrapper("https://query.wikidata.org/bigdata/namespace/wdq/sparql")
 wikiData.setReturnFormat(JSON)
+wikiData.setTimeout(200)
+
 def askWikidata(query):
 
     wikiData.setQuery(query)
-
     try:
         ret = wikiData.queryAndConvert() 
         return ret
@@ -113,8 +114,6 @@ def getWikiRecommendation(directors,genres,producers,writers,artists):
         ?movie wdt:P136 ?genreQ.
     VALUES ?writer {"""+writers+""" }
         ?movie wdt:P58 ?writer.
-    VALUES ?artist {"""+artists+""" }
-        ?movie wdt:P161 ?artist.
 
     OPTIONAL { ?movie wdt:P345 ?imdb .}
     ?movie wdt:P136 ?genreQ.

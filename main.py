@@ -80,7 +80,12 @@ def toJson(items):
 def formatMovies(movies):
     formatedmovies = []
     for movie in movies:
-        formatedMovie = [movie["genre"]["value"],movie["title"]["value"],movie["imdb"]["value"][2:],movie["date"]["value"]]
+        formatedMovie =[]
+        if("imdb" in movie):
+            formatedMovie = [movie["genre"]["value"],movie["title"]["value"],movie["imdb"]["value"][2:],movie["date"]["value"]]
+        else:
+            formatedMovie = [movie["genre"]["value"],movie["title"]["value"]," ",movie["date"]["value"]]
+
         formatedmovies.append(formatedMovie)
     return formatedmovies
             
@@ -110,7 +115,6 @@ def query_example():
 
     if (not isinstance(recommendations, list)):
         recommendations = recommendations.values.tolist()
-    print(recommendations)
     response = app.response_class(
     
     response=json.dumps(recommendations),
