@@ -64,9 +64,7 @@ function showPage(url){
         default:
             if(url.startsWith("/recommendation?")){
                 let [empty, query] = url.split("?")
-                /*if(!query){
-                    query = "userId1=2&userId2=3&type=true"
-                }*/
+
                 nextPageId = 'recommendation-page'
                 loadRecommenationsPage(query)
 
@@ -84,7 +82,6 @@ function showPage(url){
     
 }
 function loadSearchBar(bodyDiv){
-    //const bodyDiv = document.querySelector('.container#entry-page')
 
     const divContainer = document.createElement("div")
     divContainer.classList.add("container")
@@ -143,25 +140,11 @@ function loadSearchBar(bodyDiv){
     checkboxlabel.appendChild(checkboxSpan)
     form.appendChild(checkboxParagraph)
 
-    /**    <p>
-      <label>
-        <input type="checkbox" checked="checked" />
-        <span>Yellow</span>
-      </label>
-    </p> */
     const lensSearchIcon = document.createElement("i")
     lensSearchIcon.classList.add("material-icons")
     lensSearchIcon.classList.add("search-icon")
     lensSearchIcon.innerText ="search"
     lensSearchIcon.id="lens-search-icon"
-
-    /*const wikiSearchLabel = document.createElement("label")
-    wikiSearchLabel.innerText = "gg"
-    const lensSearchLabel = document.createElement("label")
-    lensSearchLabel.innerText = "lens"
-    
-    wikidataButton.appendChild(wikiSearchLabel)
-    lenskitButton.appendChild(lensSearchLabel)*/
 
     const wikiSearchIcon = document.createElement("i")
     wikiSearchIcon.classList.add("material-icons")
@@ -172,9 +155,6 @@ function loadSearchBar(bodyDiv){
 
     wikidataButton.appendChild(wikiSearchIcon)
     lenskitButton.appendChild(lensSearchIcon)
-
-    //wikidataButton.innerText = "Wikidata search"
-    //lenskitButton.innerText = "Lenskit search"
 
     wikidataButton.addEventListener('click', function(e){
         e.preventDefault()

@@ -2,10 +2,11 @@ from SPARQLWrapper import SPARQLWrapper, JSON
 
 wikiData = SPARQLWrapper("https://query.wikidata.org/bigdata/namespace/wdq/sparql")
 wikiData.setReturnFormat(JSON)
+wikiData.setTimeout(200)
+
 def askWikidata(query):
 
     wikiData.setQuery(query)
-
     try:
         ret = wikiData.queryAndConvert() 
         return ret
@@ -60,7 +61,7 @@ def getMovieInfoByImdbId(imdbId):
     SELECT ?director ?genre ?producer ?writer ?artist
     WHERE {
     VALUES ?type1 { wd:Q5398426 wd:Q11424} ?movie wdt:P31 ?type1 .
-    ?movie wdt:P345 '"""+imdbId+"""'.
+    ?movie wdt:P345 'tt"""+imdbId+"""'.
     ?movie wdt:P57 ?director.
     ?movie wdt:P136 ?genre.
     ?movie wdt:P162 ?producer.
@@ -113,8 +114,6 @@ def getWikiRecommendation(directors,genres,producers,writers,artists):
         ?movie wdt:P136 ?genreQ.
     VALUES ?writer {"""+writers+""" }
         ?movie wdt:P58 ?writer.
-    VALUES ?artist {"""+artists+""" }
-        ?movie wdt:P161 ?artist.
 
     OPTIONAL { ?movie wdt:P345 ?imdb .}
     ?movie wdt:P136 ?genreQ.
@@ -145,7 +144,7 @@ def getWikiRecommendation(directors,genres,producers,writers,artists):
     FILTER(LANG(?title)="en")
     FILTER(LANG(?genre)="en")    }
     """
-    movies = askWikidata(queryWithOr)
+    movies = askWikidata(queryWithAnd)
 
     return movies["results"]["bindings"]
 #director = getMovieInfoByLabel("Submarine")

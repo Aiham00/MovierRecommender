@@ -125,19 +125,18 @@ function loadSignupPage(){
           passwordRepeat: user.passwordRepeat
         })
     }).then (function(response){
-      return response.json()
+      if(response.status == 201){
+        return response.json()
+        .then(function(result){
+          console.log(result)
+            showPage("/entry/login")
+        })
+      }else{
+        showPage("/entry/sign-up")
+
+      }
     
-      .then(function(result){
-        console.log(result)
-        if(result.status == 201){
-          showPage("/entry/login")
 
-        }else{
-          showPage("/entry/sign-up")
-
-        }
-
-      })
       
     }).catch (function(error){
       errorDiv.innerHTML = ""

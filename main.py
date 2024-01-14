@@ -80,7 +80,12 @@ def toJson(items):
 def formatMovies(movies):
     formatedmovies = []
     for movie in movies:
-        formatedMovie = [movie["genre"]["value"],movie["title"]["value"],movie["date"]["value"]]
+        formatedMovie =[]
+        if("imdb" in movie):
+            formatedMovie = [movie["genre"]["value"],movie["title"]["value"],movie["imdb"]["value"][2:],movie["date"]["value"]]
+        else:
+            formatedMovie = [movie["genre"]["value"],movie["title"]["value"]," ",movie["date"]["value"]]
+
         formatedmovies.append(formatedMovie)
     return formatedmovies
             
@@ -99,17 +104,15 @@ def query_example():
     userId2 = request.args['userId2']
     type = request.args['type']
     recommendations = ""
-    print(type)
 
     if(type=="wiki"):
         movies = engine.getWikidataRecommendations(userId1,userId2)
         recommendations = formatMovies(movies)
-  
+        
     else:
-        print("2222")
         type = True if (request.args['type'] == "true") else False
         recommendations = engine.geLensKitRecommendations(userId1,userId2,type)
-    #recommendations = recommendations.to_json(orient="records")
+
     if (not isinstance(recommendations, list)):
         recommendations = recommendations.values.tolist()
     response = app.response_class(
