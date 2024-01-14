@@ -9,12 +9,17 @@ pip install -U flask-cors
 run python main.py
 or python3 main.py
 
-Front-end istallation
-run 
-npm install
-Node spa/app.js
 
 send requests to http://127.0.0.1:5000
-ex:post request to http://127.0.0.1:5000/recommendation?userId1=2&userId2=3&type=false
+ex: http://127.0.0.1:5000/recommendation?userId2=3&type=false
 
 Note: that you need Node.Js installed to run the front-end application. 
+
+frontend running:
+npm install
+node spa/app.js
+http://127.0.0.1:8040/
+
+Email and password may be used to log in
+Email: aiham682@hotmail.com
+Password:asdasd
